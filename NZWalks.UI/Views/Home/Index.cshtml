@@ -1,0 +1,32 @@
+﻿@* Binding models to the controller *@
+@* @model MemberManagement *@
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>        
+  
+</div>
+@if (ViewData["Email"] != null)
+{
+    <div class="alert alert-info">
+        <strong>Email:</strong> @ViewData["Email"]
+    </div>
+}
+@if(ViewData["Role"] !=null)
+{
+<div class="alert alert-info">
+    <strong>Role:</strong> @ViewData["Role"]
+</div>
+
+}

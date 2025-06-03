@@ -1,0 +1,56 @@
+﻿@model NZWalks.UI.Models.ViewModel.RegisterViewModel
+@{
+}
+
+<div class="mx-auto">
+    <div class="row justify-content-center"
+        <div class="col-12 col-lg-6">
+            <h1 class="mt-3 mb-3 h3">
+                Register
+            </h1>
+            <h5 class="mt-3 mb-3 h5">
+                Please enter your details to register
+            </h5>
+            <form method="post" asp-controller="Auths" asp-action="Register">
+                <div class="form-group mb-3">
+                    <label class="form-label">Email</label>
+                    <input type="text" id="username" class="form-control" asp-for ="Username"/>
+                    <span asp-validation-for="Username" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label class="form-label">Password</label>
+                    <input type="password" id="password" class="form-control" asp-for="Password"/>
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label class="form-label" asp-for="ConfirmPassword">Confirm password</label>
+                    <input type="password" id="password" class="form-control" asp-for="ConfirmPassword"/>
+                    <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label class="form-label">Role</label>
+                    <select class="form-select" name="roles" asp-for="Roles">
+                        <option value="reader">Reader</option>
+                        @* <option value="admin">Admin</option> *@
+                        <option value="writer">Writer</option>
+                    </select>
+                    <span asp-validation-for="Roles" class="text-danger"></span>
+                </div>
+
+                <div class="form group mb-3">
+                    <button type="submit" class="btn btn-dark">Register</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@* Section Scripts: block defines a section for including JavaScript files.
+    The _ValidationScriptsPartial partial view includes the necessary JavaScript files for client-side validation.
+    The partial view is included in the _Layout.cshtml file.
+*@
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

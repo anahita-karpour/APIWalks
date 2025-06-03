@@ -1,0 +1,35 @@
+﻿@using NZWalks.UI.Models.ViewModel
+@model LoginViewModel
+
+<div class="mx-auto">
+    <div class="row justify-content-center"
+        <div class="col-12 col-lg-6">
+            @if (TempData["SuccessMessage"] != null)
+            {
+        <div class="alert alert-success">
+                    @TempData["SuccessMessage"]
+        </div>
+            }
+            <h1 class="mt-3 mb-3 h3">
+                Login
+            </h1>
+            <form asp-controller="Auths" asp-action="Login" method="post">
+                <div class="mb-3">
+                    <label class="form-label" for="username">Email</label>
+                    <input type="text" id="username" class="form-control" asp-for ="Username" autocomplete="username"/>
+                    <span asp-validation-for="Username" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label" for="password">Password</label>
+                    <input type="password" id="password" class="form-control" asp-for="Password" autocomplete="current-password/>
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <button type="submit" class="btn btn-dark">Login</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

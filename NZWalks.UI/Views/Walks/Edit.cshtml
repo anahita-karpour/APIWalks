@@ -1,0 +1,49 @@
+﻿@model NZWalks.API.Models.DTO.UpdateWalkRequestDto
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+
+
+<h1>Edit Walk</h1>
+
+@* <form method="post">
+    <input type="hidden" asp-for="Id" />
+
+    <div class="mb-3">
+        <label asp-for="Name" class="form-label">Name</label>
+        <input type="text" class="form-control" asp-for="Name">
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Length" class="form-label">Length (km)</label>
+        <input type="number" class="form-control" asp-for="Length">
+        <span asp-validation-for="Length" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="RegionId" class="form-label">Region</label>
+        <select class="form-select" asp-for="RegionId" asp-items="@ViewBag.Regions">
+            <option value="">Select Region</option>
+        </select>
+        <span asp-validation-for="RegionId" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="WalkDifficultyId" class="form-label">Difficulty</label>
+        <select class="form-select" asp-for="WalkDifficultyId" asp-items="@ViewBag.WalkDifficulties">
+            <option value="">Select Difficulty</option>
+        </select>
+        <span asp-validation-for="WalkDifficultyId" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Save Changes</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+} *@
+

@@ -1,0 +1,60 @@
+﻿@using NZWalks.UI.Models.ViewModel
+@* Binding models to the controller *@
+@model AddWalkViewModelWithErrorMessage
+
+
+
+
+
+@* Create a form for submitting walk data from the web application to the API *@
+
+<h1 class="mt-3">Add Walk</h1>
+
+@* @if (ViewBag.ErrorMessage != null)
+{
+    <p class="alert alert-danger">@ViewBag.ErrorMessage</p>
+} *@
+@if (!string.IsNullOrEmpty(Model.ErrorMessage))
+{
+    <div class="alert alert-danger">
+        @Model.ErrorMessage
+    </div>
+}
+
+<form method="post">
+    <div class="form-group mt-3">
+        <label class="form-label" for="name">Name</label>
+        <input type="text" class="form-control" asp-for="WalkViewModel.Name" /> @*  Binding Control input elements to the properties we created inside the view model using asp-for *@
+        @* asp-for="Code" means the Code properties of the ViewModel should be binded to this input element *@
+
+        <span asp-validation-for="WalkViewModel.Name" class="text-danger"></span>
+    </div>
+    <div class="form-group mt-3">
+        <label for="description" class="form-label">Description</label>
+        <input type="text" class="form-control" asp-for="WalkViewModel.Description" />
+        <span asp-validation-for="WalkViewModel.Name" class="text-danger"></span>
+    </div>
+    <div class="form-group mt-3">
+        <label for="lengthInKm" class="form-label">Length (Km)</label>
+        <input type="text" class="form-control" asp-for="WalkViewModel.LengthInKm" />
+        <span asp-validation-for="WalkViewModel.LengthInKm" class="text-danger"></span>
+    </div>
+    <div class="form-group mt-3">
+        <label for="image" class="form-label">Image URL</label>
+        <input type="text" class="form-control" asp-for="WalkViewModel.WalkImageUrl" />
+        <span asp-validation-for="WalkViewModel.WalkImageUrl" class="text-danger"></span>
+    </div>
+    <div class="form-group mt-3">
+        <label for="region" class="form-label">Region ID</label>
+        <input type="text" class="form-control" asp-for="WalkViewModel.RegionId" />
+        <span asp-validation-for="WalkViewModel.RegionId" class="text-danger"></span>
+    </div>
+    <div class="form-group mt-3">
+        <label for="difficulty" class="form-label">Difficulty ID</label>
+        <input type="text" class="form-control" asp-for="WalkViewModel.DifficultyId" />
+        <span asp-validation-for="WalkViewModel.DifficultyId" class="text-danger"></span>
+    </div>
+    <div class="mt-3">
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
+</form>

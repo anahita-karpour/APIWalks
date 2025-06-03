@@ -1,0 +1,11 @@
+﻿@{
+    ViewData["Title"] = "Access Denied";
+}
+
+<h1>Access Denied</h1>
+<p>You are not authorized to access this resource.</p>
+
+@if (!string.IsNullOrEmpty(ViewBag.ReturnUrl))
+{
+    <p>You were trying to access: <strong>@ViewBag.ReturnUrl</strong></p>
+}

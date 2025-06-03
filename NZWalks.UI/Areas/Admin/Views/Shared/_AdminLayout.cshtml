@@ -1,0 +1,156 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Admin Dashboard </title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/NZWalks.UI.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-gradient border-bottom box-shadow mb-3">
+            <div class="container-fluid">
+                <a class="navbar-brand" asp-area="Admin" asp-controller="Home" asp-action="Index">
+                    Admin Dashboard
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span> @* d-md-none: This class ensures the button is hidden on medium screens and up, so it only appears on small screens where the sidebar is collapsed by default. *@
+                </button>                                     @* data-bs-target="#adminSidebar: tells Bootstrap that this button should toggle the element with the ID adminSidebar, which is left navigation" *@
+                <button class="navbar-toggler d-md-none" type="button" data-bs-toggle="collapse" data-bs-target="#adminSidebar" aria-controls="adminSidebar" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="Admin" asp-controller="Home" asp-action="Index">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Regions" asp-action="Index">Regions</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Walks" asp-action="Index">Walks</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="Admin" asp-controller="Home" asp-action="Index">Admin</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle text-dark" href="#" id="accountdropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                account
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="accountdropdown">
+                                    @if (Context.Request.Cookies["jwttoken"] == null)
+                                    {
+                                    <li><a class="dropdown-item text-dark" asp-area="" asp-controller="auths" asp-action="register">register</a></li>
+                                    <li><a class="dropdown-item text-dark" asp-area="" asp-controller="auths" asp-action="login">login</a></li>
+                                    }
+                                    else
+                                    {
+                                    <li>
+                                        <form method="post" asp-area="" asp-controller="auths" asp-action="logout">
+                                            <button type="submit" class="dropdown-item text-dark">logout</button>
+                                        </form>
+                                    </li>
+                                    }
+                            </ul>
+                        </li>
+                            
+
+                         <li class="nav-item dropdown text-dark">
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a class="dropdown-item text-dark"
+                                       asp-area=""
+                                       asp-controller="adminwalks"
+                                       asp-action="index">walks - admin</a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container-fluid">  @* Using container-fluid for full width: allowing the sidebar to extent closer to the left edge of the screen *@
+        <div class="row"> @*a row to hold the columns *@
+            <nav id="adminSidebar" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse"> @* take up 3 columns on medium screen and 2 columns on large screen *@
+                @* d-md-block:visible on medium screen and up, bg-light sidebar collape: styling for a light background.  *@
+                <div class="position-sticky pt-2"> @* make the sidebar content sticky when scrolling and add top padding *@
+                    <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted text-uppercase">
+                        <span>Admin</span>
+                    </h6>
+                    
+                    <ul class="nav flex-column">    
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" asp-area="Admin" asp-controller="Home" asp-action="Index">
+                                <span data-feather="home" class="align-text-bottom"></span>
+                                Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="Admin" asp-controller="Members" asp-action="Index">
+                                <span data-feather="users" class="align-text-bottom"></span>
+                                Members Management
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="Admin" asp-controller="StaticText" asp-action="Index">
+                                <span data-feather="file-text" class="align-text-bottom"></span>
+                                Content Management
+                            </a>
+                        </li>
+                       
+                       @*  <li class="nav-item">
+                            <a class="nav-link" asp-area="Admin" asp-controller="Regions" asp-action="Index">
+                                <span data-feather="map" class="align-text-bottom"></span>
+                                Regions (Admin)
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="Admin" asp-controller="Walks" asp-action="Index">
+                                <span data-feather="walking" class="align-text-bottom"></span>
+                                Walks (Admin)
+                            </a>
+                        </li> *@
+                    </ul>
+
+                    <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted text-uppercase">
+                        <span>Reports</span>
+                    </h6>
+                    <ul class="nav flex-column mb-2">
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">
+                                <span data-feather="bar-chart-2" class="align-text-bottom"></span>
+                                Monthly Sales
+                            </a>
+                        </li>
+                    </ul>
+
+                </div>
+            </nav>
+        
+            <main role="main" class="col-md-9 ms-sm-auto col-lg-10 px-2">
+                @RenderBody()
+            </main>
+            
+        </div>
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container pt-3 p-3">
+            &copy; 2025 - NZWalks - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

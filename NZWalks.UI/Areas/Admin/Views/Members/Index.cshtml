@@ -1,0 +1,158 @@
+﻿@* 
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+@{
+   ViewData["Title"] = "Members Management";
+}
+
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 mb-3 border-bottom">
+    <h1 class="h2 text-capitalize">Members Management</h1>
+</div>
+<div class="mb-4">
+    <p class="mb-1">
+        This page will list all members and allow you to manage their accounts and roles.
+    </p>
+</div>
+
+<div class="container-fluid">
+    <div class="row mb-3 pb-sm-3">@* <-- gap-1: Flexbox gap — can break layout when used on grid .row, g-1:Bootstrap grid gap — intended for .row and .col-* structure *@
+        
+        @* left column: Member Profile Management *@
+        <div class="col-md-5 col-12 pe-md-2 h-100">
+
+            <form asp-action="UpdateMember" asp-controller="Members" method="post">
+                <div class="border border-2 p-3 h-100">
+                    <h4 class="text-center">Member Profile Management</h4>
+
+
+                    @* Member ID *@
+                    <div class="row mt-3"> 
+                        <div class="col-12"> @* Use col-12 to make it take full width of its parent col-md-5 *@
+                            <label for="memberId" class="form-label">Member ID</label>
+                            @* <input type="text" id="memberId" class="form-control" placeholder="Member ID" readonly> *@
+                            @* asp-for="UserId" binds the input to the UserId property in your YourPageModel *@
+                            @* Displayed but not editable *@
+                            <div id="memberIdDisplay" class="form-control bg-body-secondary text-muted">Member ID@* @Model.UserId *@ </div>
+
+                            <!-- Hidden input to submit the value -->
+                            <input type="hidden" name="UserId" value="@* @Model.UserId *@" />
+                        </div> 
+                    </div>
+
+                    @* Email & Password *@
+                    <div class="row mt-3">  @* This is now a nested row within the col-md-5 parent *@
+                        <div class="col-12">
+                            <div class="row">
+                                @* Email *@
+                                <div class="col-6">
+                            
+                                    <label for="memberEmail" class="form-label" >Email</label>
+                                    <input type="email" id="memberEmail" name="Email" class="form-control" placeholder="Member Email" value=@* @Model.Email *@ readonly>
+                                </div>
+
+                                @* Password *@
+                                <div class="col-6">
+                            <label for="memberPassword" class="form-label">Password</label>
+                                    <input type="password" name="Password" id="memberPassword" class="form-control" placeholder="Member Password" value=@* @Model.Password *@ readonly>
+                        </div>
+                            </div>                       
+                        </div>
+                    </div>
+
+                    @* Member Role *@
+                    <div class="row mt-3">
+                        <div class="col-4 dropdown">
+
+                            <label for="memberRole" class="form-label">Member Role</label>
+
+                                <select id="memberRole" name="Role" class="form-select">
+                                    <option value="User" >User</option>
+                                    <option value="Admin">Admin</option>
+                                </select>
+                            @* <button class="btn dropdown-toggle btn-outline-secondary" 
+                                    type="button" 
+                                    id="memberRole" 
+                                    data-bs-toggle="dropdown" 
+                                    aria-expanded="false"
+                                    aria-haspopup="true"   @* for better accessibility *@
+                                    @*role="button"
+                                    name="Role">
+                                Select
+                            </button> *@                            
+                        </div>    
+                     </div>
+                 
+
+                     @* Update & Delete *@
+                    <div class="row mt-3">
+                        <div class="col-12 d-flex align-items-end justify-content-end gap-2">
+                            <button type="submit" class="btn btn-outline-success flex-grow-1">Update</button>
+                            <button type="submit" class="btn btn-outline-danger flex-grow-1">Delete</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        @* Right column: Members list *@
+        <div class="col-md-7 col-12">
+            <div class="border border-2 p-3 h-100">
+                <h4 class="text-center">Members List</h4>
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered w-100">
+                    <thead>
+                        <tr>
+                            <th>Member ID</th>
+                            <th>Email</th>
+                            <th>Role</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @* @if (Model.Members != null && Model.Members.Any())
+                        {
+                            @foreach (var member in Model.Members)
+                            {
+                                <tr>
+                                    <td>@member.Id</td>
+                                    <td>@member.Email</td>
+                                    <td>@member.Role</td>
+                                    <td>
+                                        <button class="btn btn-sm btn-primary">Edit</button>
+                                        <button class="btn btn-sm btn-danger">Delete</button>                                        
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr><td colspan="4">No members found.</td></tr>
+                        } *@
+                    </tbody>
+                </table>
+                </div>
+                @* Example table structure for later *@
+               
+            </div>
+        </div>
+    </div>
+</div>
+
+@* ============
+Rule of thumb: 
+- col-* elements must be direct children of a row. 
+- row elements should be direct children of a container (.container, .container-fluid) or another col (when nesting grids). *@
+
+@* p = padding
+s = start (left in LTR layouts)
+md = applies on medium screens and up (≥768px)
+3 = Bootstrap spacing scale (≈ 1rem) *@
+
+@* pe-md-2
+p = padding
+e = end (right side in left-to-right (LTR) layouts)
+md = applies on medium devices and up (≥768px)
+2 = spacing value (≈ 0.5rem or 8px) *@
