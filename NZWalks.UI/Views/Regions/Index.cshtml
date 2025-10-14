@@ -1,11 +1,11 @@
 ﻿@using System.Security.Claims
-
-@model IEnumerable<NZWalks.UI.Models.DTO.RegionDto>
+@using NZWalks.API.Models.DTO
+@model IEnumerable<NZWalks.API.Models.DTO.RegionDtoV1>
 
 @{    
     var jwtToken = Context.Request.Cookies["jwtToken"];
     string userRole = null;
-   
+
 
     if (!string.IsNullOrEmpty(jwtToken))
     {
@@ -48,8 +48,8 @@
         <tbody>
             @if (Model != null){
                 @foreach(var region in Model)
-                {
-                    <tr>
+                {  
+                    <tr>                        
                         <td>@region.Id</td>
                         <td>@region.Code</td>
                         <td>@region.Name</td>
@@ -69,7 +69,7 @@
                                 </form>
                             }
                         </td>
-                </tr>
+                </tr>                
             }
         }
     </tbody>

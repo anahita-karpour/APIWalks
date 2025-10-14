@@ -1,11 +1,13 @@
-﻿@* 
+﻿@model NZWalks.UI.Areas.Admin.Models.ViewModel.MembersViewModel
+
+@* 
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
 }
 
 @{
-   ViewData["Title"] = "Members Management";
+   // ViewData["Title"] = "Members Management";
 }
 
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 mb-3 border-bottom">
@@ -22,11 +24,9 @@
         
         @* left column: Member Profile Management *@
         <div class="col-md-5 col-12 pe-md-2 h-100">
-
-            <form asp-action="UpdateMember" asp-controller="Members" method="post">
+            <form method="post" asp-controller="Members" asp-action="UpdateMember" id="UpdateMemberForm">
                 <div class="border border-2 p-3 h-100">
                     <h4 class="text-center">Member Profile Management</h4>
-
 
                     @* Member ID *@
                     <div class="row mt-3"> 
@@ -35,10 +35,10 @@
                             @* <input type="text" id="memberId" class="form-control" placeholder="Member ID" readonly> *@
                             @* asp-for="UserId" binds the input to the UserId property in your YourPageModel *@
                             @* Displayed but not editable *@
-                            <div id="memberIdDisplay" class="form-control bg-body-secondary text-muted">Member ID@* @Model.UserId *@ </div>
+                            <div id="memberIdDisplay" class="form-control bg-body-secondary text-muted">@* Member ID  @Model.UserId *@ </div>
 
                             <!-- Hidden input to submit the value -->
-                            <input type="hidden" name="UserId" value="@* @Model.UserId *@" />
+                            <input type="hidden" name="UserId" @* value="@Model.UserId" *@ />
                         </div> 
                     </div>
 
@@ -50,14 +50,14 @@
                                 <div class="col-6">
                             
                                     <label for="memberEmail" class="form-label" >Email</label>
-                                    <input type="email" id="memberEmail" name="Email" class="form-control" placeholder="Member Email" value=@* @Model.Email *@ readonly>
+                                    <input type="email" id="memberEmail" name="Email" class="form-control" placeholder="Member Email" @* value= "@Model.Email" *@>
                                 </div>
 
                                 @* Password *@
                                 <div class="col-6">
-                            <label for="memberPassword" class="form-label">Password</label>
-                                    <input type="password" name="Password" id="memberPassword" class="form-control" placeholder="Member Password" value=@* @Model.Password *@ readonly>
-                        </div>
+                                    <label for="memberPassword" class="form-label">Password</label>
+                                    <input type="password" name="password" id="memberpassword" class="form-control" placeholder="member password" @* value= "@Model.Password" *@ readonly>
+                                </div>
                             </div>                       
                         </div>
                     </div>
@@ -67,7 +67,6 @@
                         <div class="col-4 dropdown">
 
                             <label for="memberRole" class="form-label">Member Role</label>
-
                                 <select id="memberRole" name="Role" class="form-select">
                                     <option value="User" >User</option>
                                     <option value="Admin">Admin</option>
@@ -83,18 +82,25 @@
                                 Select
                             </button> *@                            
                         </div>    
-                     </div>
-                 
-
-                     @* Update & Delete *@
-                    <div class="row mt-3">
-                        <div class="col-12 d-flex align-items-end justify-content-end gap-2">
-                            <button type="submit" class="btn btn-outline-success flex-grow-1">Update</button>
-                            <button type="submit" class="btn btn-outline-danger flex-grow-1">Delete</button>
-                        </div>
-                    </div>
+                    </div>  
                 </div>
             </form>
+
+            @* Update & Delete *@
+            @* Buttons side-by-side using flex *@
+            @* Flex container to align the "Update" button (from the form above) and the "Delete" form *@
+            <div class="row mt-3">
+                @* <div class="col-12"> *@
+                <div class="d-flex gap-2">                    
+                    <form id="DeleteMemberForm" asp-controller="Members" asp-action="Delete" method="post" onsubmit="return confirm('Are you sure you want to delete /* @Model.UserId */?');" style="display:none;">
+                        <input type="hidden" name="id" />
+                    </form>
+
+                    <button type="submit" form="UpdateMemberForm" class="btn btn-outline-success flex-fill">Update</button>
+                    <button type="submit" class="btn btn-danger flex-fill" form="DeleteMemberForm">Delete</button>
+
+                </div>
+            </div>
         </div>
 
         @* Right column: Members list *@
@@ -155,4 +161,10 @@ md = applies on medium screens and up (≥768px)
 p = padding
 e = end (right side in left-to-right (LTR) layouts)
 md = applies on medium devices and up (≥768px)
-2 = spacing value (≈ 0.5rem or 8px) *@
+2 = spacing value (≈ 0.5rem or 8px) 
+*@
+
+ @* To make two Bootstrap buttons fill a row equally, 
+ use the Bootstrap d-flex class on the parent container 
+ and the flex-fill class on each button. 
+ This will distribute the width evenly between the two buttons *@

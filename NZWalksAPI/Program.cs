@@ -88,6 +88,7 @@ builder.Services.AddDbContext<NZWalksAuthDbContext>(options =>
 builder.Services.AddScoped<IRegionRepository, SQLRegionRepository>();
 builder.Services.AddScoped<IWalkRepository, SQLWalkRepository>();
 builder.Services.AddScoped<IImageRepository, SQLImageRepository>();
+builder.Services.AddScoped<IMemberRepository, SQLMemberRepository>();
 builder.Services.AddScoped<IRefreshTokenService, SQLRefreshTokenRepository>();
 builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
 

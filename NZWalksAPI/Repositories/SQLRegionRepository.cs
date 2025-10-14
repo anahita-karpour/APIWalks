@@ -13,7 +13,7 @@ namespace NZWalks.API.Repositories
         //so we inject DbContext class in the repository using constructor injection
         public SQLRegionRepository(NZWalksDbContext dbContext)
         {
-            this._dbContext = dbContext;
+            _dbContext = dbContext;
         }
         public async Task<List<Region>> GetAllAsync()
         {
@@ -46,7 +46,8 @@ namespace NZWalks.API.Repositories
             {
                 return null;
             }
-            existingRegion.Code = region.Code;
+
+            existingRegion.Code = region.Code.ToUpper(); //ensure the code is in capital
             existingRegion.Name = region.Name;
             existingRegion.RegionImageUrl = region.RegionImageUrl;
 

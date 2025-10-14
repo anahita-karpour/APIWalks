@@ -9,22 +9,38 @@ namespace NZWalks.UI.Services.Auths
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ILogger<JwtTokenServiceUI> _logger;
+        private readonly IRefreshTokenService _refreshTokenService;
         private readonly IConfiguration _configuration;
 
-        public JwtTokenServiceUI(IHttpContextAccessor httpContextAccessor, // JwtTokenServiceUI needs access to the HttpContext to interact with cookies.
+        public JwtTokenServiceUI(
+            IHttpContextAccessor httpContextAccessor, // JwtTokenServiceUI needs access to the HttpContext to interact with cookies.
             ILogger<JwtTokenServiceUI> logger,
+            IRefreshTokenService refreshTokenService, // Inject the RefreshTokenService to handle refresh token operations
             IConfiguration configuration)
         {
             _httpContextAccessor = httpContextAccessor;
             _logger = logger;
+            _refreshTokenService = refreshTokenService;
             _configuration = configuration;
+        }
+
+        public async Task ClearTokensAsync()
+        {
+            if (_httpContextAccessor.HttpContext != null)
+            {
+                // Delete the access token cookie
+                _httpContextAccessor.HttpContext.Response.Cookies.Delete("NZWalks.Auth.jwtToken"); // Use your actual cookie name!
+            }
+
+            // Also delete the refresh token using the RefreshTokenService
+            await _refreshTokenService.DeleteRefreshToken();
         }
 
         /// <summary>
         /// Get the JWT token from jwtToken cookie 
         /// </summary>
         /// <returns>String</returns>
-        public string GetJwtTokenFromCookies()
+        public string GetAccessTokenFromCookies()
         {
             try
             {
@@ -98,7 +114,7 @@ namespace NZWalks.UI.Services.Auths
         /// <param name="token"> 
         /// The JWT token to set in the cookies
         /// </param>
-        public void SetJwtTokenInCookies(string token)
+        public void SetAccessTokenInCookies(string token)
         {
             if (_httpContextAccessor.HttpContext != null && !string.IsNullOrEmpty(token))
             {
@@ -149,5 +165,47 @@ namespace NZWalks.UI.Services.Auths
                 );
             }
         }
+
+        //// NEW: Implement RefreshAccessTokenAsync() - This will be the most complex part
+        //public async Task<TokenRefreshResult> RefreshAccessTokenAsync()
+        //{
+        //    // This is where you make an HTTP call to your Auth Server's /refresh endpoint
+        //    // using the refresh token from _refreshTokenService.GetRefreshToken().
+        //    // Then parse the response for the new access token and save it.
+
+        //    // Example structure (you'll need to fill in the actual HttpClient call details)
+        //    // You'll likely need an HttpClient injected into JwtTokenServiceUI as well
+        //    // private readonly HttpClient _authHttpClient; // Injected for Auth API calls
+        //    // public JwtTokenServiceUI(..., HttpClient authHttpClient) { _authHttpClient = authHttpClient; }
+
+        //    try
+        //    {
+        //        var refreshToken = _refreshTokenService.GetRefreshToken();
+        //        if (string.IsNullOrEmpty(refreshToken))
+        //        {
+        //            return new TokenRefreshResult { IsSuccess = false, ErrorMessage = "No refresh token available." };
+        //        }
+
+        //        // *** IMPORTANT: Make the actual HTTP call to your authentication server's refresh endpoint ***
+        //        // Replace with your actual authentication API URL and request body
+        //        // Example: var response = await _authHttpClient.PostAsJsonAsync("your-auth-api/api/auth/refresh", new { refreshToken = refreshToken });
+        //        // This part requires your Auth API's refresh endpoint details.
+
+        //        // For now, a placeholder assuming failure:
+        //        // If the above HTTP call is successful:
+        //        // response.EnsureSuccessStatusCode();
+        //        // var refreshResponse = await response.Content.ReadFromJsonAsync<YourRefreshResponseDto>();
+        //        // SetAccessTokenInCookies(refreshResponse.NewAccessToken);
+        //        // _refreshTokenService.StoreRefreshToken(refreshResponse.NewRefreshToken); // If refresh token rotates
+        //        // return new TokenRefreshResult { IsSuccess = true, NewAccessToken = refreshResponse.NewAccessToken };
+
+        //        return new TokenRefreshResult { IsSuccess = false, ErrorMessage = "Refresh token API call not fully implemented." }; // Placeholder
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        // Log exception
+        //        return new TokenRefreshResult { IsSuccess = false, ErrorMessage = $"Refresh failed: {ex.Message}" };
+        //    }
+        //}
     }
 }

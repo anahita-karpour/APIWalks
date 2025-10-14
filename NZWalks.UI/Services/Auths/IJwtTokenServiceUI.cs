@@ -2,9 +2,10 @@
 {
     public interface IJwtTokenServiceUI
     {
-        string GetJwtTokenFromCookies();
+        string GetAccessTokenFromCookies();
         //Task<string> GetTokenAsync();
         bool IsTokenExpired(string token);
-        void SetJwtTokenInCookies(string token);
+        void SetAccessTokenInCookies(string token);
+        Task ClearTokensAsync(); // To clear all authentication related tokens
     }
 }

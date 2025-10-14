@@ -2,7 +2,7 @@
 
 namespace NZWalks.API.Models.DTO
 {
-    public class AddRegionRequestDTO
+    public class AddRegionRequestDto
     {
         [Required] //annotation for Model validation to block bad data from the endpoints
         [MinLength(3, ErrorMessage = "Code has to be a minimum of 3 characters")]

@@ -57,7 +57,6 @@ namespace NZWalksAPI.Controllers
         [Authorize]
         public async Task<IActionResult> GetAllV1()
         {
-            Console.WriteLine("--- =============================GetAllV1 Invoked ---");
             if (HttpContext.User.Identity.IsAuthenticated)
             {
                 Console.WriteLine($"User is authenticated: {HttpContext.User.Identity.Name}");
@@ -72,32 +71,8 @@ namespace NZWalksAPI.Controllers
             }
             try
             {
-                //// to test the exception handler middleware
-                //throw new Exception("This is a custom exception");
-                //// Log Information
-                //_logger.LogInformation("GetAll Regions Action Method was invoked.");
-                //_logger.LogWarning("This is a warning log message");
-                //_logger.LogError("This is an error log message");
-
-
-
                 // GET Data from Database - Domain Models           //to async a method, we have to await on all calls that we have to make
-                //var regionsDomain = dbContext.Regions.ToList();
-                //var regionsDomain = await dbContext.Regions.ToListAsync();
                 var regionsDomain = await _regionRepository.GetAllAsync();
-
-                //// Map Domain Models to DTOs
-                //var regionDto = new List<RegionDto>();
-                //foreach (var regionDomain in regionsDomain)
-                //{
-                //    regionDto.Add(new RegionDto()
-                //    {
-                //        Id = regionDomain.Id,
-                //        Code = regionDomain.Code,
-                //        Name = regionDomain.Name,
-                //        RegionImageUrl = regionDomain.RegionImageUrl
-                //    });
-                //}
 
                 //Map Domain Models to DTO V1 - using AutoMapper
                 var regionsDto = _autoMapper.Map<List<RegionDtoV1>>(regionsDomain);
@@ -126,7 +101,6 @@ namespace NZWalksAPI.Controllers
         {
             try
             {
-
                 // GET Data from Database - Domain Models           //to async a method, we have to await on all calls that we have to make;
                 var regionsDomain = await _regionRepository.GetAllAsync();
 
@@ -189,7 +163,7 @@ namespace NZWalksAPI.Controllers
         [HttpPost]
         [ValidateModel]
         [Authorize(Roles = "Writer, Admin")]
-        public async Task<IActionResult> Create([FromBody] AddRegionRequestDTO addRegionRequestDTO)
+        public async Task<IActionResult> Create([FromBody] AddRegionRequestDto addRegionRequestDTO)
         {
             //if (ModelState.IsValid)
             //{

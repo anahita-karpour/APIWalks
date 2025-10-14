@@ -1,11 +1,12 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using NZWalks.API.Models.Domain;
 using NZWalks.API.Repositories;
 
 namespace NZWalks.API.Data
 {
-    public class NZWalksAuthDbContext : IdentityDbContext//<IdentityUser, IdentityRole, string>
+    public class NZWalksAuthDbContext : IdentityDbContext<IdentityUser, IdentityRole, string>
     {
         public NZWalksAuthDbContext(DbContextOptions<NZWalksAuthDbContext> options) : base(options)
         {
@@ -14,6 +15,7 @@ namespace NZWalks.API.Data
         /// This is the table that will be created in the database
         /// // for the refresh tokens. The RefreshToken class is in the Models/Domain folder
         public DbSet<RefreshToken> RefreshTokens { get; set; } // This is the table that will be created in the database
+        public DbSet<Member> Members { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

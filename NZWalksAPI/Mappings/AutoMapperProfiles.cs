@@ -16,7 +16,7 @@ namespace NZWalks.API.Mappings
             // Region
             CreateMap<Region, RegionDtoV1>().ReverseMap();
             CreateMap<Region, RegionDtoV2>().ForMember(dest => dest.RegionName, opt => opt.MapFrom(src => src.Name));
-            CreateMap<AddRegionRequestDTO, Region>().ReverseMap();
+            CreateMap<AddRegionRequestDto, Region>().ReverseMap();
             CreateMap<UpdateRegionRequestDto, Region>().ReverseMap();
 
             // Walk
@@ -30,6 +30,12 @@ namespace NZWalks.API.Mappings
             // Image
             CreateMap<Image, ImageUploadResponseDto>().ReverseMap();
             CreateMap<Image, ImageUploadRequestDto>().ReverseMap();
+
+            // Member
+            CreateMap<Member, MemberDto>().ReverseMap();
+            //CreateMap<AddMemberRequestDto, Member>().ReverseMap();
+            CreateMap<UpdateMemberRequestDto, Member>().ReverseMap();
+
 
         }
     }

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using NZWalks.UI.Mappings;
 using NZWalks.UI.Services.Auths;
 using NZWalks.UI.Services.Common;
+using NZWalks.UI.Services.Members;
 using NZWalks.UI.Services.Regions;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net.Http.Headers;
@@ -58,7 +59,8 @@ builder.Services.AddScoped<IHttpClientAuthService, HttpClientAuthService>();
 builder.Services.AddScoped<ICookieService, CookieService>(); // or AddTransient or AddSingleton
 builder.Services.AddScoped<IRefreshTokenService, RefreshTokenService>();
 builder.Services.AddScoped<IJwtTokenServiceUI, JwtTokenServiceUI>();
-builder.Services.AddScoped<RegionApiService>();
+builder.Services.AddScoped<IMemberService, MemberService>(); // Register the MemberService
+builder.Services.AddScoped<IRegionService, RegionService>();
 
 // Add Authentication Configuration
 builder.Services.AddAuthentication(options =>

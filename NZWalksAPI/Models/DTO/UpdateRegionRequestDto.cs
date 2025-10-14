@@ -1,9 +1,12 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace NZWalks.API.Models.DTO
 {
     public class UpdateRegionRequestDto
     {
+        [ReadOnly(true)]
+        public Guid Id { get; set; } // Unique identifier for the region
         // we are including the properties that the client can update
 
         [Required]

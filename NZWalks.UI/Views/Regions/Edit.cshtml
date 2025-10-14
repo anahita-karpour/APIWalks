@@ -1,9 +1,5 @@
-﻿@model NZWalks.UI.Models.DTO.RegionDto
-@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
+﻿@model NZWalks.UI.Models.ViewModel.UpdateRegionViewModel
+
 <h1 class="mt-3">Edit Region</h1>
 @* <p>
 @ViewBag.Id
@@ -16,35 +12,57 @@
     </div>
 }
 
-@if(Model != null)
-{
-    <form method="post">
-        <div class="form-group mt-3">
-            <label class="form-label" for="id">Id</label>
-            <input type="text" class="form-control" asp-for="Id" readonly/>
-            <span asp-validation-for="Id" class="text-danger"></span>
-        </div>
-        <div class="form-group mt-3">
-            <label class="form-label" for="code">Code</label>
-            <input type="text" class="form-control" asp-for="Code" /> @*  Binding Control input elements to the properties we created inside the view model using asp-for *@
-            @* asp-for="Code" means the Code properties of the ViewModel should be binded to this input element *@
+<div class="mb-3">
+    @* mb-3 adds margin-bottom for spacing *@
+    <a asp-controller="Regions" asp-action="Index" class="btn btn-link btn-lg text-secondary" aria-label="Back to Regions List">
+        @* btn-link *@
+        <i class="bi bi-arrow-return-left"></i>
+    </a>
+</div>
 
-            <span asp-validation-for="Code" class="text-danger"></span>
+@if(Model != null){  
+    
+       @*  Form for saving/editing the region (without the button inside) *@
+        <form method="post" class="mb-3" asp-controller="Regions" asp-action="Edit" id="editRegionForm">
+            <div class="form-group mt-3">
+                <label class="form-label">Id</label>
+                <input type="text" class="form-control" asp-for="Id" readonly/>
+                <span asp-validation-for="Id" class="text-danger"></span>
+            </div>
+            <div class="form-group mt-3">
+                <label class="form-label">Code</label>
+                <input type="text" class="form-control" asp-for="Code" /> @*  Binding Control input elements to the properties we created inside the view model using asp-for *@
+                @* asp-for="Code" means the Code properties of the ViewModel should be binded to this input element *@
+
+                <span asp-validation-for="Code" class="text-danger"></span>
+            </div>
+            <div class="form-group mt-3">
+                <label class="form-label">Name</label>
+                <input type="text" class="form-control" asp-for="Name" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group mt-3">
+                <label class="form-label">Image URL</label>
+                <input type="text" class="form-control" asp-for="RegionImageUrl" />
+                <span asp-validation-for="RegionImageUrl" class="text-danger"></span>
+            </div>
+            </form>
+        @* Buttons side-by-side using flex *@
+        @* Flex container to align the "Save" button (from the form above) and the "Delete" form *@
+        <div class="d-flex justify-content-between gap-2 mt-4">
+            @* .d-flex div for horizontal alignment. *@
+            
+            @* Submit button for the main edit form *@
+            <button type="submit" form="editRegionForm" class="btn btn-primary">Save</button>
+            
+            @* Separate form for deleting the region *@
+            <form asp-controller="Regions" asp-action="Delete" asp-route-id="@Model.Id" method="post" onsubmit="return confirm('Are you sure you want to delete @Model.Name?');">
+                <input type="hidden" name="id" value="@Model.Id" />
+                <button type="submit" class="btn btn-danger">Delete</button>
+            </form>
         </div>
-        <div class="form-group mt-3">
-            <label for="name" class="form-label">Name</label>
-            <input type="text" class="form-control" asp-for="Name" />
-            <span asp-validation-for="Name" class="text-danger"></span>
-        </div>
-        <div class="form-group mt-3">
-            <label for="image" class="form-label">Image URL</label>
-            <input type="text" class="form-control" asp-for="RegionImageUrl" />
-            <span asp-validation-for="RegionImageUrl" class="text-danger"></span>
-        </div>
-        @* <div class="mt-3"> *@
-        <div class="mt-3 d-flex justify-content-between">
-            <button type="submit" class="btn btn-primary">Save</button>
-            <button type="submit" asp-controller="Regions" asp-action="Delete" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete @Model.Name?');" style="display:inline-block;">Delete</button>
-        </div>
-    </form>
 }
+@* To align two buttons horizontally from different forms using Bootstrap, you can wrap them in a parent element and use flexbox utilities to achieve horizontal alignment. 
+    Specifically, you can use d-flex and justify-content-* (e.g., justify-content-between) to distribute space between the buttons. 
+    You can also use align-items-center to center the buttons vertically within the container.  
+*@

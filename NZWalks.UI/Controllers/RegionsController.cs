@@ -1,6 +1,7 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using NZWalks.UI.Models.DTO;
+using NZWalks.API.Models.DTO;
 using NZWalks.UI.Models.ViewModel;
 using NZWalks.UI.Services.Auths;
 using NZWalks.UI.Services.Regions;
@@ -10,9 +11,10 @@ namespace NZWalks.UI.Controllers
     [Route("[controller]")]
     public class RegionsController : BaseController
     {
-        private readonly RegionApiService _regionApiService;
+        private readonly IRegionService _regionService;
         private readonly ILogger<RegionsController> _logger;
         private readonly IJwtTokenServiceUI _jwtTokenServiceUI;
+        private readonly IMapper _mapper;
 
         /// <summary>
         /// This constructor initializes the RegionsController with the required services.
@@ -20,11 +22,16 @@ namespace NZWalks.UI.Controllers
         /// <param name="httpClientFactory"></param>
         /// <param name="configuration"></param>
         /// <param name="logger"></param>
-        public RegionsController(RegionApiService regionApiService, ILogger<RegionsController> logger, IJwtTokenServiceUI jwtTokenServiceUI)
+        public RegionsController(
+            IRegionService regionService,
+            ILogger<RegionsController> logger,
+            IJwtTokenServiceUI jwtTokenServiceUI,
+            IMapper mapper)
         {
-            _regionApiService = regionApiService;
+            _regionService = regionService;
             _logger = logger;
             _jwtTokenServiceUI = jwtTokenServiceUI;
+            _mapper = mapper;
         }
 
 
@@ -39,18 +46,18 @@ namespace NZWalks.UI.Controllers
         {
             try
             {
-                var regions = await _regionApiService.GetAllRegionsAsync();
+                var regions = await _regionService.GetAllRegionsAsync();
                 if (regions != null)
                 {
                     return View(regions);
                 }
-                return View(new List<RegionDto>()); // Return an empty list if regions is null.
+                return View(new List<RegionDtoV1>()); // Return an empty list if regions is null.
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An unexpected error occurred.");
                 ViewBag.ErrorMessage = "An unexpected error occurred.";
-                return View(new List<RegionDto>());
+                return View(new List<RegionDtoV1>());
             }
         }
 
@@ -83,11 +90,6 @@ namespace NZWalks.UI.Controllers
         {
             if (!ModelState.IsValid)
             {
-                // ModelState is invalid, handle errors
-                //foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
-                //{
-                //    Console.WriteLine(error.ErrorMessage);
-                //}
                 return View(addRegionViewModel);          // By returning the addRegionViewModel with the View(),
                                                           // you're sending back the data that the user entered.
                                                           // This allows the form to be re - rendered with the
@@ -95,19 +97,12 @@ namespace NZWalks.UI.Controllers
             }
             try
             {
-                //var client = await _httpClientAuthService.GetAuthorizedClient();
-                ////var client = _httpClient.CreateClient(); // use IHttpClientFactory to create an instance of HttpClient
-                //string token = GetJwtTokenFromCookies();
-                //if (!string.IsNullOrEmpty(token))
-                //{
-                //    client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
-                //}
-                //else
-                //{
-                //    _logger.LogWarning("JWT Token was null or empty");
-                //}
+                // Convert ViewModel to Request DTO before sending to the service
                 addRegionViewModel.RegionViewModel.Code = addRegionViewModel.RegionViewModel.Code?.ToUpper(); // Convert to uppercase
-                var response = await _regionApiService.AddRegionAsync(addRegionViewModel.RegionViewModel);
+                var addRegionRequestDto = _mapper.Map<AddRegionRequestDto>(addRegionViewModel.RegionViewModel);
+
+
+                var response = await _regionService.AddRegionAsync(addRegionRequestDto); // Pass the Dto
 
                 if (response != null)
                 {
@@ -115,38 +110,6 @@ namespace NZWalks.UI.Controllers
                 }
                 addRegionViewModel.ErrorMessage = "The API did not return a valid RegionDto.";
                 return View(addRegionViewModel);
-
-                //var httpRequestMessage = new HttpRequestMessage()
-                //{
-                //    Method = HttpMethod.Post, // the HTTP method used for the request
-                //    //RequestUri = new Uri("https://localhost:7152/regions"),
-                //    // Configuration["Jwt:Issuer"]??
-                //    RequestUri = new Uri($"{_configuration.GetSection("ApiSettings")["BaseUrl"]}/v1/regions"), // the URL of the resource to consume. ideally should be stored in the appsettings.json file
-                //    Content = new StringContent(JsonSerializer.Serialize(addRegionViewModel.RegionViewModel), Encoding.UTF8, "application/json")
-                //    // the content of the request. In this case, it's the addRegionViewModel object serialized to JSON
-                //};
-
-                //// Add the JWT token to the Authorization header
-                //httpRequestMessage.Headers.Authorization = new AuthenticationHeaderValue("Bearer", jwtToken);
-
-
-                //var httpResponseMessage = await client.SendAsync(httpRequestMessage);
-                //_logger.LogInformation("Response Content: {responseContent}", httpResponseMessage.Content);
-
-                //httpResponseMessage.EnsureSuccessStatusCode();
-
-                //var response = await httpResponseMessage.Content.ReadFromJsonAsync<RegionDto>();
-                //foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
-                //{
-                //    Console.WriteLine(error.ErrorMessage);
-                //}
-                //if (response != null)
-                //{
-                //    return RedirectToAction("Index", "Regions");
-                //}
-                ////ViewBag.ErrorMessage = "The API did not return a valid RegionDto.";
-                //addRegionViewModel.ErrorMessage = "The API did not return a valid RegionDto.";
-                //return View(addRegionViewModel);
             }
             catch (Exception ex)
             {
@@ -169,45 +132,16 @@ namespace NZWalks.UI.Controllers
         {
             try
             {
-                var region = await _regionApiService.GetRegionByIdAsync(id);
-                if (region != null)
+                var regionDto = await _regionService.GetRegionByIdAsync(id);
+                if (regionDto != null)
                 {
-                    return View(region);
+                    var updateRegionViewModel = _mapper.Map<UpdateRegionViewModel>(regionDto);
+
+                    return View(updateRegionViewModel);
                 }
-                return View(null);
-                //var client = await _httpClientAuthService.GetAuthorizedClient();
-                ////ViewBag.Id = id;
-                ////var client = _httpClient.CreateClient(); // create a new HttpClient instance to use for consuming the web API
-                //string token = GetJwtTokenFromCookies();
-                //if (!string.IsNullOrEmpty(token))
-                //{
-                //    client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
-                //}
-
-                //var response = await client.GetFromJsonAsync<RegionDto>($"{_configuration.GetSection("ApiSettings")["BaseUrl"]}/v1/regions/{id.ToString()}"); // the URL of the resource to consume. ideally should be stored in the appsettings.json file
-                //if (response != null)
-                //{
-                //    return View(response);
-                //}
+                TempData["ErrorMessage"] = "Region not found.";
+                return RedirectToAction("Index", "Regions");
             }
-            //catch (HttpRequestException ex)
-            //{
-            //    // Handle HTTP request errors (e.g., network issues, 404, 500)
-            //    Console.WriteLine($"HTTP request error: {ex.Message}");
-            //    // Log the exception details for debugging
-            //    _logger.LogError(ex, "Error getting region.");
-            //    // Consider returning a default value or throwing a custom exception
-            //    return View(null); // or throw new CustomRegionException("Failed to get region.", ex);
-
-            //}
-            //catch (System.Text.Json.JsonException ex)
-            //{
-            //    // Handle JSON deserialization errors (e.g., invalid JSON format)
-            //    Console.WriteLine($"JSON deserialization error: {ex.Message}");
-            //    // Log the exception details for debugging.
-            //    _logger.LogError(ex, "Error deserializing region JSON.");
-            //    return View(null); // or throw new CustomRegionException("Failed to deserialize region data.", ex);
-            //}
             catch (Exception ex)
             {
                 // Handle any other unexpected exceptions
@@ -217,7 +151,6 @@ namespace NZWalks.UI.Controllers
 
                 return View(null); //Or throw another custom exception.
             }
-            //return View(null);
         }
 
         /// <summary>
@@ -227,82 +160,43 @@ namespace NZWalks.UI.Controllers
         /// <returns></returns>
 
         [HttpPost]
-
         [Route("Edit/{id:guid}")] // Matches /Regions/Edit/your-guid-here
         [Authorize(Roles = "Admin, Writer")]
-        public async Task<IActionResult> Edit(UpdateRegionViewModel request)
+        public async Task<IActionResult> Edit(UpdateRegionViewModel updateRequest)
         {
+            if (!ModelState.IsValid)
+            {
+                // If validation fails, return the ViewModel to the view so errors can be displayed
+                return View(updateRequest);
+            }
+
+            // Map the ViewModel to the API Request DTO
+            var updateRequestDto = _mapper.Map<UpdateRegionRequestDto>(updateRequest);
+
             try
             {
-                //var client = await _httpClientAuthService.GetAuthorizedClient();
-                //var client = _httpClient.CreateClient(); // create a new HttpClient instance to use for consuming the web API
-                //string token = GetJwtTokenFromCookies();
-                //if (!string.IsNullOrEmpty(token))
-                //{
-                //    client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
-                //}
+                var success = await _regionService.UpdateRegionAsync(updateRequestDto);
 
-                //var httpRequestMessage = new HttpRequestMessage()
-                //{
-                //    Method = HttpMethod.Put,
-                //    RequestUri = new Uri($"{_configuration.GetSection("ApiSettings")["BaseUrl"]}/v1/regions/{request.Id}"),
-                //    Content = new StringContent(JsonSerializer.Serialize(request), Encoding.UTF8, "application/json")
-                //};
-                //var httpResponseMessage = await client.SendAsync(httpRequestMessage); // the URL of the resource to consume. ideally should be stored in the appsettings.json file
-                //httpResponseMessage.EnsureSuccessStatusCode();
-
-                //var response = await httpResponseMessage.Content.ReadFromJsonAsync<RegionDto>();
-
-                //if (response != null)
-                //{
-                //    return RedirectToAction("Index", "Regions"); // redirect to the Index action of the Regions controller
-                //}
-                //else
-                //{
-                //    _logger.LogWarning($"API returned null response for region ID '{request.Id}'.");
-                //    TempData["ErrorMessage"] = "Failed to update region: API returned null.";
-                //    return RedirectToAction("Edit", new { id = request.Id }); // TempData is designed for short-lived data that needs to persist only
-                //                                                              // for the next request. It's particularly useful when you're redirecting
-                //                                                              // from one action to another, as regular view data(ViewBag or ViewData)
-                //                                                              // won't survive the redirect.
-                //}
-                var response = await _regionApiService.UpdateRegionAsync(request);
-                if (response != null)
+                if (success)
                 {
+                    TempData["SuccessMessage"] = "Region updated successfully.";
                     return RedirectToAction("Index", "Regions");
                 }
-                TempData["ErrorMessage"] = "Failed to update region: API returned null.";
-                return RedirectToAction("Edit", new { id = request.Id });
+                else // If 'success' is false (API call failed)
+                {
+                    TempData["ErrorMessage"] = "Failed to update region. Please ensure all fields are valid or check server logs.";
+                    // Stay on the edit page to show the error
+                    return View(updateRequest);
+                }
             }
-            //catch (HttpRequestException ex)
-            //{
-            //    // Handle HTTP request errors (e.g., network issues, 404, 500)
-            //    Console.WriteLine($"HTTP request error: {ex.Message}");
-            //    // Log the exception details for debugging
-            //    _logger.LogError(ex, "Error updating region.");
-            //    TempData["ErrorMessage"] = "Failed to update region.";
-            //    return RedirectToAction("Edit", new { id = request.Id });
-            //}
-            //catch (System.Text.Json.JsonException ex)
-            //{
-            //    // Handle JSON deserialization errors (e.g., invalid JSON format)
-            //    Console.WriteLine($"Error deserializing region JSON: {ex.Message}");
-            //    // Log the exception details for debugging.
-            //    _logger.LogError(ex, "Error deserializing region JSON.");
-            //    TempData["ErrorMessage"] = "Failed to deserialize region data.";
-            //    return RedirectToAction("Edit", new { id = request.Id });
-            //}
             catch (Exception ex)
             {
-                // Handle any other unexpected exceptions
-                Console.WriteLine($"An unexpected error occurred: {ex.Message}");
                 // Log the exception details for debugging
-                _logger.LogError(ex, "An unexpected error occurred while updating region.");
-                TempData["ErrorMessage"] = "An unexpected error occurred.";
-                return RedirectToAction("Edit", new { id = request.Id });
+                _logger.LogError(ex, "An unexpected error occurred while updating region with ID {RegionId}.", updateRequest.Id);
+                TempData["ErrorMessage"] = "An unexpected error occurred while processing your request.";
+                // Return to the edit page with the error
+                return View(updateRequest);
             }
-            //TempData["ErrorMessage"] = "An unexpected error occurred."; // TempData is used because the error message needs to persist across a redirect
-            //return RedirectToAction("Edit", new { id = request.Id });
         }
 
         /// <summary>
@@ -318,29 +212,9 @@ namespace NZWalks.UI.Controllers
         {
             try
             {
-                await _regionApiService.DeleteRegionAsync(Id);
-                //var client = await _httpClientAuthService.GetAuthorizedClient();
-                ////var client = _httpClient.CreateClient(); // create a new HttpClient instance to use for consuming the web API
-
-                //var token = GetJwtTokenFromCookies();
-                //if (!string.IsNullOrEmpty(token))
-                //{
-                //    client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
-                //}
-
-                //var httpResponseMessage = await client.DeleteAsync($"{_configuration.GetSection("ApiSettings")["BaseUrl"]}/v1/regions/{request.Id}"); // the URL of the resource to consume. ideally should be stored in the appsettings.json file
-                //httpResponseMessage.EnsureSuccessStatusCode();
+                await _regionService.DeleteRegionAsync(Id);
                 return RedirectToAction("Index", "Regions");
             }
-            //catch (HttpRequestException ex)
-            //{
-            //    // Handle HTTP request errors (e.g., network issues, 404, 500)
-            //    Console.WriteLine($"HTTP request error: {ex.Message}");
-            //    // Log the exception details for debugging
-            //    _logger.LogError(ex, "Error deleting region.");
-            //    TempData["ErrorMessage"] = "Failed to delete region.";
-            //    return RedirectToAction("Index", "Regions");
-            //}
             catch (Exception ex)
             {
                 // Handle any other unexpected exceptions

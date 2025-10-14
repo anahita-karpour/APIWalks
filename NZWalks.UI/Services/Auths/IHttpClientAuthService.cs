@@ -10,5 +10,8 @@
 
         // Sends an authorized HTTP request
         Task<HttpResponseMessage> SendAuthorizedRequest(HttpMethod method, string requestUri, HttpContent content = null);
+        // OVERLOAD for requests with a body (POST/PUT)
+        Task<HttpResponseMessage> SendAuthorizedRequest(HttpMethod method, string requestUri, object body);
+
     }
 }
