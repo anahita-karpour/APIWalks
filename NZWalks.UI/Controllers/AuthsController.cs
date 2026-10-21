@@ -86,7 +86,7 @@ namespace NZWalks.UI.Controllers
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
                 var url = $"{_configuration.GetSection("ApiSettings")["BaseUrl"]}/auth/register";
 
-                _logger.LogInformation("Sending Register Request: {Url}, {Content}", url, json);
+                _logger.LogInformation("Sending Register Request: {Url}", url);
 
                 var httpRequestMessage = new HttpRequestMessage()
                 {
@@ -95,7 +95,7 @@ namespace NZWalks.UI.Controllers
                     Content = content
                 };
 
-                _logger.LogInformation("Sending Register Request: {RequestUri}, {Content}", httpRequestMessage.RequestUri, json);
+                _logger.LogInformation("Sending Register Request: {RequestUri}", httpRequestMessage.RequestUri);
 
                 //3 - Send the request
                 //var httpResponseMessage = await client.SendAsync(httpRequestMessage);
@@ -253,13 +253,10 @@ namespace NZWalks.UI.Controllers
                     ////HttpContext.Session.SetString("AuthToken", token);
                     // 1. Extract the JWT token from the response
                     var responseContent = await response.Content.ReadAsStringAsync();
-                    _logger.LogInformation($"Raw API Response: {responseContent}");
-                    _logger.LogInformation($"API Response - Status: {response.StatusCode}, Content: {responseContent}");
 
                     //var loginResponse = System.Text.Json.JsonSerializer.Deserialize<LoginResponseDto>(responseContent);
                     var loginResponse = JsonConvert.DeserializeObject<API.Models.DTO.LoginResponseDto>(responseContent);
-                    Console.WriteLine($"Token: {loginResponse?.Token}");
-                    _logger.LogInformation($"Generated JWT: {loginResponse?.Token}");
+                    _logger.LogInformation("Login successful for API.");
 
 
                     //var tokenResponse = System.Text.Json.JsonSerializer.Deserialize<TokenResponse>(responseContent);

@@ -89,7 +89,6 @@ namespace NZWalks.API.Controllers
                 }
 
                 _logger.LogInformation("Successfully retrieved {Count} members.", membersDto.Count);
-                _logger.LogInformation($"GetAll Members request with data was successful: {JsonSerializer.Serialize(membersDto)}");
                 return Ok(membersDto);
             }
             catch (Exception e)
@@ -152,7 +151,7 @@ namespace NZWalks.API.Controllers
         [Authorize(Roles = "Admin")] // Only Admins can update member details
         public async Task<IActionResult> UpdateMemberAsync([FromRoute] Guid id, [FromBody] UpdateMemberRequestDto requestDto)
         {
-            _logger.LogInformation("Attempting to update member with ID: {Id}. Request: {@Request}", id, requestDto);
+            _logger.LogInformation("Attempting to update member with ID: {Id}", id);
 
             if (!ModelState.IsValid)
             {
@@ -227,7 +226,7 @@ namespace NZWalks.API.Controllers
                 if (!addResult.Succeeded)
                 {
                     var errors = string.Join("; ", addResult.Errors.Select(e => e.Description));
-                    _logger.LogError("Failed to add new role '{NewRole}' for IdentityUser ID {Id}: {Errors}", newRole, id);
+                    _logger.LogError("Failed to add new role '{NewRole}' for IdentityUser ID {Id}: {Errors}", newRole, id, errors);
                     return StatusCode(500, $"Failed to add role '{newRole}': {errors}");
                 }
 
@@ -252,7 +251,7 @@ namespace NZWalks.API.Controllers
                     Role = rolesAfterUpdate.FirstOrDefault() ?? "" // Assuming only one role, take the first, or empty string
                 };
 
-                _logger.LogInformation("Successfully updated member with ID: {Id}. Result: {@MemberDto}", id, memberDto);
+                _logger.LogInformation("Successfully updated member with ID: {Id}.", id);
                 return Ok(memberDto);
             }
             catch (Exception ex)

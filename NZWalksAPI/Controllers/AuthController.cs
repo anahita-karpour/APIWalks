@@ -49,7 +49,7 @@ namespace NZWalks.API.Controllers
                 // and an HTTP 400 Bad Request response to the client.
             }
 
-            _logger.LogInformation($"Received RegisterRequestDto: {JsonConvert.SerializeObject(registerRequestDto)}"); // Add this line
+            _logger.LogInformation("Register attempt for user {registerRequestDto.Username}", registerRequestDto.Username); // Add this line
             var identityUser = new IdentityUser
             {
                 UserName = registerRequestDto.Username,
@@ -189,7 +189,7 @@ namespace NZWalks.API.Controllers
             }
             else
             {
-                _logger.LogError($"Failed to invalidate refresh token '{refreshToken}' for user '{userId}'.");
+                _logger.LogError("Failed to invalidate refresh token for user '{UserId}'.", userId);
                 return StatusCode(500, "Internal Server Error: Failed to invalidate refresh token.");
             }
         }
@@ -200,7 +200,7 @@ namespace NZWalks.API.Controllers
 
         public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenRequestDto refreshTokenRequestDto)
         {
-            _logger.LogInformation($"Received RefreshToken request. AccessToken: {refreshTokenRequestDto?.AccessToken?.Substring(0, Math.Min(refreshTokenRequestDto.AccessToken.Length, 20))}..., RefreshToken: {refreshTokenRequestDto?.RefreshToken}"); // Log the start
+            _logger.LogInformation("Processing refresh token request."); // Log the start
             // 1. Request Handling: the [FromBody] attribute indicates that the data (AccessToken and RefreshToken) will be sent in the JSON body of the HTTP request
             // use RefreshTokenRequestDto to recieve the incoming data: the access token and refresh token
             // use the RefreshTokenResponseDto to send back the new tokens in response back to the client
@@ -242,7 +242,7 @@ namespace NZWalks.API.Controllers
                     // Checks if the refresh token has been invalidated or used.
                     // Ensures the refresh token has not expired.
                     var storedRefreshToken = await _refreshTokenService.GetRefreshToken(refreshTokenRequestDto.RefreshToken);
-                    _logger.LogInformation($"Retrieved stored refresh token: {JsonConvert.SerializeObject(storedRefreshToken)}");
+                    _logger.LogInformation("Stored refresh token found: {Found}.", storedRefreshToken != null);
 
 
                     if (storedRefreshToken == null ||
