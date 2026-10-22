@@ -6,10 +6,6 @@ namespace NZWalks.UI.Services.Regions
 {
     public class RegionService : BaseApiService, IRegionService
     {
-        private readonly IHttpClientAuthService _httpClientAuthService;
-        private readonly ILogger<RegionService> _logger;
-        private readonly UI.Services.Auths.IRefreshTokenService _refreshTokenService;
-        private readonly IJwtTokenServiceUI _jwtTokenServiceUI;
         private readonly IMapper _mapper;
         //private readonly HttpClient _httpClient;
 
@@ -19,15 +15,9 @@ namespace NZWalks.UI.Services.Regions
             UI.Services.Auths.IRefreshTokenService refreshTokenService,
             IJwtTokenServiceUI jwtTokenServiceUI,
             IMapper mapper
-            //, HttpClient httpClient
             ) : base(logger, jwtTokenServiceUI, refreshTokenService, httpClientAuthService) // Call the base constructor to initialize the base class
         {
-            _httpClientAuthService = httpClientAuthService;
-            _logger = logger;
-            _refreshTokenService = refreshTokenService;
-            _jwtTokenServiceUI = jwtTokenServiceUI;
             _mapper = mapper;
-            //_httpClient = httpClient;
         }
 
         /// <summary>

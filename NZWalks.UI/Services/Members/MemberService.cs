@@ -5,31 +5,17 @@ namespace NZWalks.UI.Services.Members
 {
     public class MemberService : BaseApiService, IMemberService
     {
-        private readonly IHttpClientAuthService _httpClientAuthService;
-        private readonly ILogger<MemberService> _logger;
-        private readonly UI.Services.Auths.IRefreshTokenService _refreshTokenService;
         private readonly IConfiguration _configuration;
-        private readonly IJwtTokenServiceUI _jwtTokenServiceUI;
-        //private readonly IMapper _mapper;
-        //private readonly HttpClient _httpClient;
 
         public MemberService(IHttpClientAuthService httpClientAuthService,
             ILogger<MemberService> logger,
             UI.Services.Auths.IRefreshTokenService refreshTokenService,
             IConfiguration configuration,
             IJwtTokenServiceUI jwtTokenServiceUI
-            //, IMapper mapper
-            //, HttpClient httpClient
             ) : base(logger, jwtTokenServiceUI, refreshTokenService, httpClientAuthService) // Call the base constructor
 
         {
-            _httpClientAuthService = httpClientAuthService;
-            _logger = logger;
-            _refreshTokenService = refreshTokenService;
             _configuration = configuration;
-            _jwtTokenServiceUI = jwtTokenServiceUI;
-            //_mapper = mapper;
-            // _httpClient = httpClient;
         }
 
 

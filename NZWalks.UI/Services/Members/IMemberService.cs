@@ -8,7 +8,7 @@ namespace NZWalks.UI.Services.Members
         Task<IEnumerable<MemberDto>> GetAllMembersAsync();
 
         // Method to get a single member by ID (for pre-populating the form)
-        Task<MemberDto> GetMemberByIdAsync(Guid id);
+        Task<MemberDto?> GetMemberByIdAsync(Guid id);// the ? means it can be null, so if the member is not found, it will return null instead of throwing an exception
 
         // Method to update a member
         Task<bool> UpdateMemberAsync(Guid id, UpdateMemberRequestDto memberUpdateRequestDto);

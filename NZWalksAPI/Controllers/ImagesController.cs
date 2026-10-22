@@ -16,15 +16,18 @@ namespace NZWalks.API.Controllers
         private readonly IImageRepository _imageRepository;
         private readonly IConfiguration _configuration; // Inject configuration
         private readonly IMapper _mapper;
+        private readonly ILogger<ImagesController> _logger;
 
         public ImagesController(
             IImageRepository imageRepository,
             IConfiguration configuration,
-            IMapper mapper)
+            IMapper mapper,
+            ILogger<ImagesController> logger)
         {
             _imageRepository = imageRepository;
             _configuration = configuration;
             _mapper = mapper;
+            _logger = logger;
         }
 
         // POST: /api/Images/Upload
@@ -93,7 +96,7 @@ namespace NZWalks.API.Controllers
                 }
                 catch (Exception ex)
                 {
-                    // Log the error
+                    _logger.LogError(ex, "Failed to upload image.");
                     return StatusCode(500, "Failed to upload image.");
                 }
             }

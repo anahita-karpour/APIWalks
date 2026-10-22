@@ -4,12 +4,12 @@ namespace NZWalks.UI.Controllers
 {
     public class WalksController : BaseController
     {
-        private readonly IHttpClientFactory _httpClientFactory;
-        private readonly IConfiguration _configuration;
-        private readonly ILogger<WalksController> _logger;
-        private readonly IJwtTokenServiceUI _jwtTokenServiceUI;
-        private readonly IHttpClientAuthService _httpClientAuthService;
-        private readonly HttpClient _httpClient;
+        //private readonly IHttpClientFactory _httpClientFactory;
+        //private readonly IConfiguration _configuration;
+        //private readonly ILogger<WalksController> _logger;
+        //private readonly IJwtTokenServiceUI _jwtTokenServiceUI;
+        //private readonly IHttpClientAuthService _httpClientAuthService;
+        //private readonly HttpClient _httpClient;
 
         //    public WalksController(
         //        IHttpClientFactory httpClientFactory,
